@@ -1,0 +1,17 @@
+{% extends 'cabinet/base.html' %}
+
+{% block content %}
+<div class="features">
+    <h1> {{title}} </h1>
+    <br />
+    <ul>
+        {% for key, value in group_dict.items %}
+        <h3> {{ key }} </h3>
+        {% for cl, gr in value %}
+        <a href="{{ cl.get_absolute_url }}"><li> <h5>{{ gr }}</h5> </li></a> 
+        {% endfor %} 
+        {% endfor %} 
+    </ul>
+
+</div>
+{% endblock %}

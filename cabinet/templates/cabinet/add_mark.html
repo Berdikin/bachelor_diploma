@@ -1,0 +1,22 @@
+{% extends 'cabinet/base.html' %}
+
+{% block content %}
+<div class="features">
+    <h1> {{title}} </h1>
+    <br />
+</div>
+<div class="forms">
+    <form action="" method="post">
+        {% csrf_token %}
+        <div class="form-error">{{ form.non_field_errors }}</div>
+        {% for f in form %}
+        <p><label for="{{ form.title.id_for_label }}">{{f.label}}: </label>{{f}}</p>
+        <div class="form-error">{{f.errors}}</div>
+        {% endfor %}
+        <br />
+        <button type="submit">Поставить</button>
+    </form>
+</div>
+
+
+{% endblock %}

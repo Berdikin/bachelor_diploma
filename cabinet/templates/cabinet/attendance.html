@@ -1,0 +1,86 @@
+{% extends 'cabinet/base.html' %}
+
+{% block content %}
+<div class="features">
+    <h2> {{title}} </h2>
+</div>
+
+
+<div class="log">
+    <table>
+        <thead>
+            <tr>
+                <th></th>
+                {% for date in dates %}
+                    <th>{{ date.time|date:"d/m" }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Соединить оценки студентов и даты в тьюпл, чтобы передававть -->
+            {% for student, marks_list in attendances.items %}
+                <tr>
+                    <td style="text-align: left;">{{ student.name }}</td>
+                    {% for mark in  marks_list %}
+                        <td id="{{mark.1.pk}}">
+                        {% if mark.1 %}
+                            {{ mark.1.mark }}
+                        {% endif %}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'log' lesson.slug %}"><h5>Перейти к оценкам</h5></a>
+</div>
+
+<script>
+    $(document).ready(function(){
+    });
+    function django_message(msg, level) {
+        var levels = {
+            warning: 'alert',
+            error: 'error',
+            success: 'success',
+            info: 'info'
+        },
+        source = $('#message_template').html(),
+        template = Handlebars.compile(source),
+        context = {
+            'tags': levels[level],
+            'message': msg
+        },
+        html = template(context);
+
+        $("#message_area").append(html);
+    }
+    var freeze_td = false;
+    $('td').click(function(){
+        if (!freeze_td) {
+            var mark=$(this).text().trim();
+            $(this).html('<input type="text" size="2" value="' + mark + '">');
+            freeze_td = true;
+        }
+    });
+    $('td').on("mouseleave", function(e){
+        if (freeze_td) {
+            var mark=$(this).children('input').val().trim();
+            var mark_id=$(this).attr("id");
+            url = "{% url 'update_mark' 0 %}".replace('0', mark_id);
+            e.preventDefault();
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {"mark": mark, "id_mark": mark },
+                success: function(data, textStatus, jqXHR) {
+                    console.log(data);
+                },
+            });
+            $(this).html(mark);
+            freeze_td = false;
+        }
+    });
+</script>
+
+{% endblock %}

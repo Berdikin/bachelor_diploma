@@ -1,0 +1,12 @@
+{% extends 'cabinet/base.html' %}
+
+{% block content %}
+<div class="features">
+    <h1> {{title}} </h1>
+    <form action="" method="post">{% csrf_token %}
+        <p>Вы уверены, что хотите удалить {{ timetable.lesson.lesson }} {{ timetable.time }}?</p>
+        <input type="submit" value="Удалить" />
+    </form>
+
+</div>
+{% endblock %}

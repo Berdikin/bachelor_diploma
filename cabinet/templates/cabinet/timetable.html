@@ -1,0 +1,74 @@
+{% extends 'cabinet/base.html' %}
+
+{% block content %}
+<div class="features">
+    <h1>{{ title }}</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Дата</th>
+                <th>Время</th>
+                <th>Предмет</th>
+                <th>Группа</th>
+                <th>Тип занятия</th>
+                <th>Аудитория</th>
+                {% if not request.user.is_authenticated %}
+                <th>Преподаватель</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for timetable in timetable_list %}
+                <tr>
+                    <td>{{ timetable.time|date:"d/m/y"}}</td>
+                    <td>{{ timetable.time|date:"H:i"}}</td>
+                    <td style="max-width: 200px;">{{ timetable.lesson.lesson}}</td>
+                    <td style="max-width: 100px;"> {{ timetable.lesson.get_groups }} </td>
+                    <td style="width: 50px;">{{ timetable.lesson.type}}</td>
+                    {% if timetable.classroom %}
+                    <td>{{ timetable.classroom}}</td>
+                    {% else %}
+                    <td><a href="{{ timetable.url }}">Дист. занятие</a></td>
+                    {% endif %}
+                    {% if not request.user.is_authenticated %}
+                        <td>{{ timetable.lesson.teacher.name}}</td>
+                    {% else %}
+                        <td style="position: sticky; right: 5px; text-align: left; background: none; padding: 20px 10px;">
+                            <p class="link-timetable"><a href="{{timetable.slug}}/update">Изменить</a></p>
+                        </td>
+                        <td style="position: sticky; right: 5px; text-align: left; background: none; padding: 20px 10px;">
+                            <p class="link-timetable"><a href="{{timetable.slug}}/delete">Удалить</a></p>
+                        </td>
+                        {% if not timetable.type == 'ЛК' %}
+                            <td style="position: sticky; right: 5px; text-align: left; background: none; padding: 20px 10px;">
+                                <p class="link-timetable"><a href="{{ timetable.lesson.get_absolute_url }}">Журнал</a></p>
+                            </td>
+                        {% endif %}
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </tbody>    
+    </table>
+    <!-- <br /> -->
+    {% if request.user.is_authenticated %}
+    <button><a style="color: #fff; text-decoration: none; display: inline-block;" href="{% url 'add_timetable' %}">Добавить занятие</a></button>
+    {% endif %}
+    {% if page_obj.has_other_pages %}
+    <dev class="list-pages">
+        <ul>
+            {% for p in paginator.page_range %}
+            {% if page_obj.number == p %}
+            <li class="page-num page-num-selected">{{ p }}</li>
+            {%elif p >= page_obj.number|add:-2 and p <= page_obj.number|add:2 %}
+            <li class="page-num">
+                <a href="?page={{ p }}">{{ p }}</a>
+            </li>
+            {% endif %}
+            {% endfor %}
+        </ul>
+    </dev>
+    {% endif %}
+</div>
+
+{% endblock %}

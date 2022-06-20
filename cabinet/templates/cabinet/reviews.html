@@ -1,0 +1,20 @@
+{% extends 'cabinet/base.html' %}
+
+{% block content %}
+<div class="features">
+    <h1> {{title}} </h1>
+    <br />
+    <ul>
+        {% for key, value in lessons.items %}
+        <h3><b> {{ key }} </b></h3>
+        {% for k, v in value.items %}
+        <h4> {{ k }} </h4>
+        {% for t in v %}
+        <a href="{{t.slug}}"><li> <h5>{{ t.name }}</h5> </li></a> 
+        {% endfor %}
+        {% endfor %} 
+        {% endfor %} 
+    </ul>
+
+</div>
+{% endblock %}

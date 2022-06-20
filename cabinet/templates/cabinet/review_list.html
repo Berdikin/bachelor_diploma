@@ -1,0 +1,19 @@
+{% extends 'cabinet/base.html' %}
+
+{% block content %}
+<div class="features">
+    <h1>{{ title }}</h1>
+    {% if reviews %}
+    <ul>
+        {% for r in reviews %}
+        <li>
+                  <p>{{r.review}}</p>
+                  <hr>
+        </li>
+        {% endfor %}
+    {% else %}
+    <p>Пока никто не оставлял отзывов</p>
+</body>
+    {% endif %}
+</ul>
+{% endblock %}
